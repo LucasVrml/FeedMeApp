@@ -1,0 +1,140 @@
+/* styles/globals.scss */
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+// Votre code Sass personnalisé
+
+@mixin dots($count) {
+  $text-shadows: "";
+  @for $i from 1 through $count {
+    $x: (-0.5 + random() * 3) * 1em;
+    $y: (-0.5 + random() * 3) * 1em;
+    $blur: 7px;
+    $color: hsla(97, 67%, 55%, 0.9);
+    $text-shadows: #{$text-shadows}#{if($i > 1, ", ", "")}
+      #{$x}
+      #{$y}
+      #{$blur}
+      #{$color};
+  }
+  text-shadow: #{$text-shadows};
+}
+
+.bg-animated {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  font: 5vmin/1.3 Serif;
+  display: block;
+  font-size: 52px;
+  color: transparent;
+}
+
+.bg-animated::before,
+.bg-animated::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3em;
+  height: 3em;
+  content: ".";
+  mix-blend-mode: screen;
+  animation: move infinite ease-in-out alternate;
+}
+
+.bg-animated::before {
+  @include dots(10);
+  animation-duration: 42s;
+  animation-delay: -23s;
+}
+
+.bg-animated::after {
+  @include dots(10);
+  animation-duration: 41s;
+  animation-delay: -19s;
+}
+
+@keyframes move {
+  from {
+    transform: rotate(0deg) scale(12) translateX(-20px);
+  }
+  to {
+    transform: rotate(360deg) scale(18) translateX(20px);
+  }
+}
+
+.bg-custo {
+  width: 100%;
+  background-image: url("./bg-login.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.noscrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.noscrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Votre code pour la couche base */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 97 67% 55%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 97 67% 55%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 24 9.8% 10%;
+    --foreground: 0 0% 95%;
+    --card: 24 9.8% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 97 67% 55%;
+    --primary-foreground: 144.9 80.4% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 97 67% 55%;
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
