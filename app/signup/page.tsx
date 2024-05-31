@@ -35,7 +35,7 @@ export default function SignUp({
       },
     });
     if (error || !data.user?.id) {
-      return redirect("/signup?message=Could not authenticate user");
+      return redirect("/signup?message=Erreur lors de la création du compte");
     }
     if (data.user?.id) {
       await supabase.from("user").insert({
@@ -53,6 +53,14 @@ export default function SignUp({
           list_id: listId[0].id,
           user_id: data.user.id,
         });
+        await supabase.from("category").insert([
+          {
+            name: "Entrées",
+            user_id: data.user.id,
+          },
+          { name: "Plats", user_id: data.user.id },
+          { name: "Desserts", user_id: data.user.id },
+        ]);
       }
       return redirect("/protected/recipes");
     }
