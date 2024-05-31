@@ -114,37 +114,24 @@ const List = ({
         checked: false,
       });
       const res = useResponseMiddleware({ error, data }, toast);
-      if (res) {
-        if (additionalIngredients) {
-          const newAdditionalIngredients = [...additionalIngredients, res[0]];
-          setAdditionalIngredients(newAdditionalIngredients);
-        } else {
-          setAdditionalIngredients([res[0]]);
-        }
-        setNewIngredient("");
-      }
     }
   }
 
   async function handleDeleteItem(id: number) {
     if (focusedList) {
+      const newItems = ingredients.filter((el) => el.id !== id);
+      setIngredients(newItems);
       const { error } = await deleteListItem(focusedList.id, id);
       const res = useResponseMiddleware({ error }, toast);
-      if (res) {
-        const newItems = ingredients.filter((el) => el.id !== id);
-        setIngredients(newItems);
-      }
     }
   }
 
   async function handleDeleteAdditionalItem(id: number) {
     if (focusedList) {
+      const newItems = additionalIngredients.filter((el) => el.id !== id);
+      setAdditionalIngredients(newItems);
       const { error } = await deleteAdditionalListItem(focusedList.id, id);
       const res = useResponseMiddleware({ error }, toast);
-      if (res) {
-        const newItems = additionalIngredients.filter((el) => el.id !== id);
-        setAdditionalIngredients(newItems);
-      }
     }
   }
 
@@ -383,7 +370,29 @@ const List = ({
                   })}
               </div>
             </div>
-            <form onSubmit={handleFormSubmit} className="w-full flex gap-x-2">
+            <form
+              onSubmit={(ev) => {
+                let newId = 1;
+                if (additionalIngredients.length > 0) {
+                  newId =
+                    additionalIngredients[additionalIngredients.length - 1]
+                      .id || 1;
+                }
+                const newAdditionalIngredients = [
+                  ...additionalIngredients,
+                  {
+                    list_id: focusedList?.id || 1,
+                    name: newIngredient,
+                    checked: false,
+                    id: newId + 1,
+                  },
+                ];
+                setAdditionalIngredients(newAdditionalIngredients);
+                setNewIngredient("");
+                handleFormSubmit(ev);
+              }}
+              className="w-full flex gap-x-2"
+            >
               <Input
                 value={newIngredient}
                 onChange={(ev) => setNewIngredient(ev.target.value)}

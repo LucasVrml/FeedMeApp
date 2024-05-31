@@ -10,6 +10,7 @@ import {
 import { useResponseMiddleware } from "@/hooks/useResponseMiddleware";
 import { useToast } from "./ui/use-toast";
 import Image from "next/image";
+import { useState } from "react";
 
 const DetailedRecipe = ({
   recipe,
@@ -21,32 +22,45 @@ const DetailedRecipe = ({
   categories?: Category[];
 }) => {
   const { toast } = useToast();
+  const [recipeState, setRecipeState] = useState(recipe);
 
-  async function handleCategoryClick(id: number, add: boolean) {
-    if (recipe) {
+  async function handleCategoryClick(id: number, name: string, add: boolean) {
+    if (recipeState) {
       if (add) {
-        const { error } = await addRecipeCategory(recipe.id, id);
+        const newRecipe = { ...recipeState };
+        newRecipe.category = [
+          ...(newRecipe.category || []),
+          {
+            id,
+            name,
+          },
+        ];
+        setRecipeState(newRecipe);
+        const { error } = await addRecipeCategory(recipeState.id, id);
         useResponseMiddleware({ error }, toast);
       } else {
-        const { error } = await removeRecipeCategory(recipe.id, id);
+        const newRecipe = { ...recipeState };
+        newRecipe.category = newRecipe.category?.filter((el) => el.id !== id);
+        setRecipeState(newRecipe);
+        const { error } = await removeRecipeCategory(recipeState.id, id);
         useResponseMiddleware({ error }, toast);
       }
     }
   }
 
-  if (recipe) {
+  if (recipeState) {
     return (
       <div className="p-0 w-full h-full flex flex-col justify-start items-center gap-y-7">
         <h1 className="text-4xl font-bold capitalize text-center">
-          {recipe?.name}
+          {recipeState?.name}
         </h1>
         <div className="flex justify-center items-center gap-2 w-full">
           <div className="flex justify-center items-center gap-2 flex-wrap w-full">
             {categories?.map(({ id, name }) => {
-              if (recipe.category?.map((el) => el.id).includes(id)) {
+              if (recipeState.category?.map((el) => el.id).includes(id)) {
                 return (
                   <Badge
-                    onClick={() => handleCategoryClick(id, false)}
+                    onClick={() => handleCategoryClick(id, name, false)}
                     key={id}
                     variant="default"
                   >
@@ -56,7 +70,7 @@ const DetailedRecipe = ({
               }
               return (
                 <Badge
-                  onClick={() => handleCategoryClick(id, true)}
+                  onClick={() => handleCategoryClick(id, name, true)}
                   key={id}
                   variant={"outline"}
                 >
@@ -66,10 +80,10 @@ const DetailedRecipe = ({
             })}
           </div>
         </div>
-        {recipe.image_url && (
+        {recipeState.image_url && (
           <Image
             className="rounded-3xl"
-            src={recipe.image_url}
+            src={recipeState.image_url}
             alt="Photo de la recette"
             width={500}
             height={500}
@@ -77,11 +91,12 @@ const DetailedRecipe = ({
         )}
         <h4 className="text-xl font-bold">Ingrédients</h4>
         <div className="w-full flex flex-col justify-center items-start gap-y-3 pb-10">
-          {recipe?.ingredients.map(({ id, name, unit, quantity }) => {
+          {recipeState?.ingredients.map(({ id, name, unit, quantity }) => {
             if (quantity && unit && unit !== "/") {
               const formattedQuantities =
-                Math.round(quantity * (chosenCount / recipe.counter) * 100) /
-                100;
+                Math.round(
+                  quantity * (chosenCount / recipeState.counter) * 100
+                ) / 100;
               return (
                 <CheckBoxWithText
                   key={id}
@@ -92,8 +107,9 @@ const DetailedRecipe = ({
             }
             if (quantity && (!unit || unit === "/")) {
               const formattedQuantities =
-                Math.round(quantity * (chosenCount / recipe.counter) * 100) /
-                100;
+                Math.round(
+                  quantity * (chosenCount / recipeState.counter) * 100
+                ) / 100;
               return (
                 <CheckBoxWithText
                   key={id}
@@ -109,7 +125,7 @@ const DetailedRecipe = ({
         </div>
         <h4 className="text-xl font-bold capitalize">étapes</h4>
         <div className="w-full flex flex-col justify-center items-start gap-y-3 pb-10">
-          {recipe?.steps.map((el) => {
+          {recipeState?.steps.map((el) => {
             return <CheckBoxWithText key={el} text={el} />;
           })}
         </div>

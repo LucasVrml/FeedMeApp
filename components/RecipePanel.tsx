@@ -83,6 +83,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { fileToBase64 } from "./CreationForm";
 import Image from "next/image";
+import { id } from "date-fns/locale";
 
 const RecipePanel = ({
   recipesData,
@@ -99,6 +100,7 @@ const RecipePanel = ({
     FormattedRecipe | undefined
   >(recipesData?.[0]);
   const [peopleCount, setPeopleCount] = useState(1);
+  const [categoriesState, setCategoriesState] = useState(categories);
   const [focusedCategory, setFocusedCategory] = useState(0);
   const [filteredData, setFilteredData] = useState(recipesData);
   const [newCategoryInputVisible, setNewCategoryInputVisible] = useState(false);
@@ -110,8 +112,6 @@ const RecipePanel = ({
       const { error } = await createCategory(newCategory);
       useResponseMiddleware({ error }, toast);
     }
-    setNewCategoryInputVisible(false);
-    setNewCategory("");
   });
   const { toast } = useToast();
 
@@ -285,7 +285,7 @@ const RecipePanel = ({
               >
                 <h4>Tout</h4>
               </div>
-              {categories?.map((el) => {
+              {categoriesState?.map((el) => {
                 return (
                   <Dialog key={el.id}>
                     <ContextMenu>
@@ -320,7 +320,13 @@ const RecipePanel = ({
                           <Button variant="outline">Annuler</Button>
                           <Button
                             className="bg-primary/50"
-                            onClick={async () => handleDeleteCategory(el.id)}
+                            onClick={async () => {
+                              const newCategoriesState = categoriesState.filter(
+                                (item) => el.id !== item.id
+                              );
+                              setCategoriesState(newCategoriesState);
+                              handleDeleteCategory(el.id);
+                            }}
                           >
                             Confirmer
                           </Button>
@@ -331,7 +337,33 @@ const RecipePanel = ({
                 );
               })}
               {newCategoryInputVisible && (
-                <form className="w-full" onSubmit={handleNewCategorySubmit}>
+                <form
+                  className="w-full"
+                  onSubmit={(ev) => {
+                    if (categoriesState) {
+                      const newCategoriesState = [
+                        ...categoriesState,
+                        {
+                          id:
+                            categoriesState[categoriesState.length - 1].id + 1,
+                          name: newCategory,
+                        },
+                      ];
+                      setCategoriesState(newCategoriesState);
+                    } else {
+                      const newCategoriesState = [
+                        {
+                          id: 1,
+                          name: newCategory,
+                        },
+                      ];
+                      setCategoriesState(newCategoriesState);
+                    }
+                    setNewCategoryInputVisible(false);
+                    setNewCategory("");
+                    handleNewCategorySubmit(ev);
+                  }}
+                >
                   <Input
                     className="w-full capitalize"
                     ref={InputRef}

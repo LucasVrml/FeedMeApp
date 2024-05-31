@@ -9,7 +9,7 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "Feed Me",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  description: "Une application pour gérer toutes tes recettes et plus encore!",
 };
 
 import { Raleway } from "next/font/google";
