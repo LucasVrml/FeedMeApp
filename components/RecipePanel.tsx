@@ -141,22 +141,20 @@ const RecipePanel = ({
 
   async function handleDelete() {
     if (focusedRecipe) {
+      const newFilteredData = filteredData.filter(
+        (el) => el.id !== focusedRecipe.id
+      );
+      if (filteredData?.length > 1) {
+        setFocusedRecipe(filteredData[0]);
+      } else {
+        setFocusedRecipe(undefined);
+      }
+      setFilteredData(newFilteredData);
       const { error } = await deleteRecipe(
         Number(focusedRecipe?.id),
         focusedRecipe?.image_path
       );
       const res = useResponseMiddleware({ error }, toast);
-      if (res) {
-        const newFilteredData = filteredData.filter(
-          (el) => el.id !== focusedRecipe.id
-        );
-        if (filteredData?.length > 1) {
-          setFocusedRecipe(filteredData[0]);
-        } else {
-          setFocusedRecipe(undefined);
-        }
-        setFilteredData(newFilteredData);
-      }
     }
   }
 
@@ -337,7 +335,7 @@ const RecipePanel = ({
                   className="w-full"
                   onSubmit={(ev) => {
                     ev.preventDefault();
-                    if (categoriesState) {
+                    if (categoriesState && categoriesState.length > 0) {
                       const newCategoriesState = [
                         ...categoriesState,
                         {
@@ -356,9 +354,9 @@ const RecipePanel = ({
                       ];
                       setCategoriesState(newCategoriesState);
                     }
-                    setNewCategoryInputVisible(false);
-                    setNewCategory("");
                     handleNewCategorySubmit(ev);
+                    setNewCategory("");
+                    setNewCategoryInputVisible(false);
                   }}
                 >
                   <Input
