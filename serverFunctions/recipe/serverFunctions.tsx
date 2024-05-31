@@ -1143,6 +1143,7 @@ export async function scrapUrl(url: string) {
         error: "Error while analizing the website",
       };
     }
+    console.log("correctData:", correctData);
     const openai = new OpenAI({
       apiKey: process.env.NEXT_OPENAI_API_KEY,
     });
@@ -1201,8 +1202,10 @@ export async function scrapUrl(url: string) {
         },
       ],
     });
+    console.log(response);
     if (response.choices[0].message.content) {
       const responseParsed = JSON.parse(response.choices[0].message.content);
+      console.log("responseParsed:", responseParsed);
       try {
         const promises = responseParsed.ingredients.map(
           async (el: IngredientDetail) => {
