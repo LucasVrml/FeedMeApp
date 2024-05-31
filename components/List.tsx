@@ -372,6 +372,7 @@ const List = ({
             </div>
             <form
               onSubmit={(ev) => {
+                ev.preventDefault();
                 let newId = 1;
                 if (additionalIngredients.length > 0) {
                   newId =

@@ -126,10 +126,6 @@ const RecipePanel = ({
     ev.preventDefault();
     const { error } = await createCategory(newCategory);
     const res = useResponseMiddleware({ error }, toast);
-    if (res) {
-      setNewCategory("");
-      setNewCategoryInputVisible(false);
-    }
   }
 
   function filterRecipes(newCategory: number) {
@@ -340,6 +336,7 @@ const RecipePanel = ({
                 <form
                   className="w-full"
                   onSubmit={(ev) => {
+                    ev.preventDefault();
                     if (categoriesState) {
                       const newCategoriesState = [
                         ...categoriesState,
