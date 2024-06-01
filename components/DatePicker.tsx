@@ -39,80 +39,70 @@ const DatePicker = ({
   const { toast } = useToast();
 
   async function handlePlanRecipe(recipe_id: number, recipe_name: string) {
+    if (plannedRecipes) {
+      const newRecipes = [
+        ...plannedRecipes,
+        {
+          id: recipe_id,
+          name: recipe_name,
+          count: 1,
+        },
+      ];
+      setFocusedDateRecipes(newRecipes);
+    } else {
+      setFocusedDateRecipes([
+        {
+          id: recipe_id,
+          name: recipe_name,
+          count: 1,
+        },
+      ]);
+    }
     const { error } = await planRecipe(recipe_id, selectedDate);
     const res = useResponseMiddleware({ error }, toast);
-    if (res) {
-      if (plannedRecipes) {
-        const newRecipes = [
-          ...plannedRecipes,
-          {
-            id: recipe_id,
-            name: recipe_name,
-            count: 1,
-          },
-        ];
-        setFocusedDateRecipes(newRecipes);
-      } else {
-        setFocusedDateRecipes([
-          {
-            id: recipe_id,
-            name: recipe_name,
-            count: 1,
-          },
-        ]);
-      }
-    }
   }
 
   async function handleUnPlanRecipe(recipe_id: number) {
+    const newRecipes = plannedRecipes?.filter((el) => el.id !== recipe_id);
+    setFocusedDateRecipes(newRecipes);
     const { error } = await unPlanRecipe(recipe_id, selectedDate);
     const res = useResponseMiddleware({ error }, toast);
-    if (res) {
-      const newRecipes = plannedRecipes?.filter((el) => el.id !== recipe_id);
-      setFocusedDateRecipes(newRecipes);
-    }
   }
 
   async function handleUnPlanAllRecipes() {
+    setFocusedDateRecipes([]);
     const { error } = await unPlanAllRecipe(selectedDate);
     const res = useResponseMiddleware({ error }, toast);
-    if (res) {
-      setFocusedDateRecipes([]);
-    }
   }
 
   async function handleIncreaseCount(recipe_id: number, newCount: number) {
+    const newRecipes = plannedRecipes?.map((el) => {
+      if (el.id === recipe_id) {
+        return {
+          ...el,
+          count: el.count + 1,
+        };
+      }
+      return el;
+    });
+    setFocusedDateRecipes(newRecipes);
     const { error } = await updateCount(recipe_id, selectedDate, newCount);
     const res = useResponseMiddleware({ error }, toast);
-    if (res) {
-      const newRecipes = plannedRecipes?.map((el) => {
-        if (el.id === recipe_id) {
-          return {
-            ...el,
-            count: el.count + 1,
-          };
-        }
-        return el;
-      });
-      setFocusedDateRecipes(newRecipes);
-    }
   }
 
   async function handleDecreaseCount(recipe_id: number, newCount: number) {
+    const newRecipes = plannedRecipes?.map((el) => {
+      if (el.id === recipe_id) {
+        return {
+          ...el,
+          count: el.count - 1,
+        };
+      }
+      return el;
+    });
+    setFocusedDateRecipes(newRecipes);
     const { error } = await updateCount(recipe_id, selectedDate, newCount);
     const res = useResponseMiddleware({ error }, toast);
-    if (res) {
-      const newRecipes = plannedRecipes?.map((el) => {
-        if (el.id === recipe_id) {
-          return {
-            ...el,
-            count: el.count - 1,
-          };
-        }
-        return el;
-      });
-      setFocusedDateRecipes(newRecipes);
-    }
   }
 
   async function handleAddToList(listId: number) {

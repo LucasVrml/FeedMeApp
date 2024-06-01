@@ -412,10 +412,10 @@ const List = ({
                 className="hover:bg-destructive/90 hover:text-foreground"
                 onClick={async () => {
                   if (focusedList) {
-                    const { error } = await clearList(focusedList?.id);
-                    useResponseMiddleware({ error }, toast);
                     setIngredients([]);
                     setAdditionalIngredients([]);
+                    const { error } = await clearList(focusedList?.id);
+                    useResponseMiddleware({ error }, toast);
                   }
                 }}
               >
