@@ -10,6 +10,9 @@ export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "Feed Me",
   description: "Une application pour gérer toutes tes recettes et plus encore!",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 import { Raleway } from "next/font/google";
