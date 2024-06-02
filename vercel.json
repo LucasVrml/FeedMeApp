@@ -1,6 +1,6 @@
 {
   "functions": {
-    "serverFunctions/**/*": {
+    "serverFunctions/**": {
       "maxDuration": 30
     }
   }
