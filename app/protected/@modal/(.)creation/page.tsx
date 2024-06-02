@@ -1,3 +1,5 @@
+export const maxDuration = 30;
+
 import CreationForm from "@/components/CreationForm";
 import ErrorScreen from "@/components/ErrorScreen";
 import Modal from "@/components/Modal";
