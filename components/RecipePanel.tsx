@@ -83,7 +83,6 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { fileToBase64 } from "./CreationForm";
 import Image from "next/image";
-import { id } from "date-fns/locale";
 
 const RecipePanel = ({
   recipesData,

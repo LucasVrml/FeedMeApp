@@ -10,7 +10,7 @@ import {
 import { useResponseMiddleware } from "@/hooks/useResponseMiddleware";
 import { useToast } from "./ui/use-toast";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const DetailedRecipe = ({
   recipe,
@@ -23,6 +23,10 @@ const DetailedRecipe = ({
 }) => {
   const { toast } = useToast();
   const [recipeState, setRecipeState] = useState(recipe);
+
+  useEffect(() => {
+    setRecipeState(recipe);
+  }, [recipe]);
 
   async function handleCategoryClick(id: number, name: string, add: boolean) {
     if (recipeState) {
