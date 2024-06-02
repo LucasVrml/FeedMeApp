@@ -1,9 +1,9 @@
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+import RecipePanelLoading from "@/components/RecipePanelLoading";
 
 const Loading = () => {
   return (
     <div className="h-[88vh] w-full flex justify-center items-center">
-      <LoadingSpinner />
+      <RecipePanelLoading />
     </div>
   );
 };

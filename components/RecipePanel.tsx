@@ -109,6 +109,26 @@ const RecipePanel = ({
   const photoInputRef = useRef<HTMLInputElement>(null);
   const InputRef = useOutsideClick(async () => {
     if (newCategory) {
+      if (categoriesState && categoriesState.length > 0) {
+        const newCategoriesState = [
+          ...categoriesState,
+          {
+            id: categoriesState[categoriesState.length - 1].id + 1,
+            name: newCategory,
+          },
+        ];
+        setCategoriesState(newCategoriesState);
+      } else {
+        const newCategoriesState = [
+          {
+            id: 1,
+            name: newCategory,
+          },
+        ];
+        setCategoriesState(newCategoriesState);
+      }
+      setNewCategory("");
+      setNewCategoryInputVisible(false);
       const { error } = await createCategory(newCategory);
       useResponseMiddleware({ error }, toast);
     }
