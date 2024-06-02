@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "serverFunctions/recipe/serverFunctions": {
-      "maxDuration": 30
-    }
-  }
-}
