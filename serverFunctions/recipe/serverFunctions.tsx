@@ -1,7 +1,5 @@
 "use server";
 
-export const maxDuration = 30;
-
 import { Category, FormattedRecipe, IngredientDetail } from "@/database.types";
 import { revalidatePath } from "next/cache";
 import { getSupabase } from "../utils/getSupabaseInstance";
